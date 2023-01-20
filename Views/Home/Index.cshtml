@@ -2,7 +2,480 @@
     ViewData["Title"] = "Home Page";
 }
 
+<style>
+</style>
+
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h3>Employee Infomation</h3>
 </div>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+}
+
+<button type="button" class="btn btn-primary" id="btnAddEmployee">Add New Employee</button>
+
+@*Edit popup*@
+<div class="modal fade" id="modal_edit" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle_edit">Edit</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <div id="modalBody_edit" class="modal-body">
+                <form role='form' id='EmployeeEditForm'>
+                    <input type="hidden" id="txtUpdateEmpID" name="txtUpdateEmpID">
+                    <table style="width: 100%; border-collapse: separate; border-spacing: 0 15px;">
+                        <tbody>
+                            <tr>
+                                <td>Employee Name<span class="red-asterik">&nbsp;*</span></td>
+                                <td class="form-group">
+                                    <input type="text" name="txtUpdateEmpName" class="form-control" id="txtUpdateEmpName" maxlength="50">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Department<span class="red-asterik">&nbsp;*</span></td>
+                                <td class="form-group">
+                                    <select name="cmbUpdateDepartment" class="form-control form-select" id="cmbUpdateDepartment">
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Address<span class="red-asterik">&nbsp;*</span></td>
+                                <td class="form-group">
+                                    <input type="text" name="txtUpdateAddress" class="form-control" id="txtUpdateAddress" maxlength="50">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Email<span class="red-asterik">&nbsp;*</span></td>
+                                <td class="form-group">
+                                    <input type="text" name="txtUpdateEmail" class="form-control" id="txtUpdateEmail" maxlength="50">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+            <div class="modal-footer" style="padding-right: .75rem;">
+                <button type="button" class="btn btn-primary" onclick="UpdateEmployee(); return false;">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Add popup*@
+<div class="modal fade" id="modal_add" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle_edit">Add Employee</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <div id="modalBody_add" class="modal-body">
+                <form role='form' id='EmployeeAddForm'>
+                    <table style="width: 100%; border-collapse: separate; border-spacing: 0 15px;">
+                        <tbody>
+                            <tr>
+                                <td>Employee Name<span class="red-asterik">&nbsp;*</span></td>
+                                <td class="form-group">
+                                    <input type="text" name="txtAddEmpName" class="form-control" id="txtAddEmpName" maxlength="50">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Department<span class="red-asterik">&nbsp;*</span></td>
+                                <td class="form-group">
+                                    <select name="cmbAddDepartment" class="form-control form-select" id="cmbAddDepartment">
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Address<span class="red-asterik">&nbsp;*</span></td>
+                                <td class="form-group">
+                                    <input type="text" name="txtAddAddress" class="form-control" id="txtAddAddress" maxlength="50">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Email<span class="red-asterik">&nbsp;*</span></td>
+                                <td class="form-group">
+                                    <input type="text" name="txtAddEmail" class="form-control" id="txtAddEmail" maxlength="50">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+            <div class="modal-footer" style="padding-right: .75rem;">
+                <button type="button" class="btn btn-primary" onclick="AddEmployee(); return false;">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Delete popup*@
+<div class="modal fade" id="modal_delete" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Confirmation</h5>
+                <div id="modalHeader_delete">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+            </div>
+            <div id="modalBody_delete" class="modal-body">
+            </div>
+            <div class="modal-footer" id="modalFooter_delete">
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal">No</button>
+                <button type="button" class="btn btn-success" onclick="DeleteEmployee(); return false;">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form role="form" id="Employee">
+    <div class="row">
+        <div class="col-xs-18 col-md-12">
+            <table id="tblEmployeeList" class="table table-bordered table-striped">
+            </table>
+        </div>
+    </div>
+</form>
+
+@section Scripts
+    {
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            bindDepartment();
+            LoadEmployeeList();
+        });
+
+        function LoadEmployeeList() {
+            $('#tblEmployeeList').DataTable(
+                {
+                    processing: true,
+                    language: {
+                        processing: '<i class="fa fa-spinner fa-spin fa-2x fa-fw"></i>'
+                    },
+                    searching: false,
+                    ordering: false,
+                    scrollY: 450,
+                    async: false,
+                    scrollCollapse: true,
+                    dom: 'rtpl',
+                    lengthMenu: [[15, 30, 45, 60, 100, -1], [15, 30, 45, 60, 100, "All"]],
+                    destroy: true,
+                    stateSave: true,
+                    ajax: {
+                        url: '@Url.Action("GetEmployeeList", "Home")',
+                        dataSrc: ""
+                    },
+                    columns: [
+                        { title: 'Employee Name', data: 'empName' },
+                        { title: 'Department Name', data: 'deptName' },
+                        { data: 'deptId', visible: false },
+                        { title: 'Address', data: 'address' },
+                        { title: 'Email', data: 'email' },
+                        { title: 'Created Date', data: 'createdDate' },
+                        {
+                            title: 'Last Updated Date',
+                            data: 'updatedDate',
+                            render: function (data, type, row) {
+                                if (data == null) {
+                                    return "-";
+                                } else {
+                                    return data;
+                                }
+                            }
+                        },
+                        {
+                            title: '',
+                            data: 'id',
+                            className: "text-center",
+                            mRender: function (data, type, row, meta) {
+                                var editPath = "<a data-id='" + data + "' data-empName='" + row.empName + "' data-deptId='" + row.deptId + "' data-address='" + row.address + "' data-email='" + row.email + "' onclick='showEditModal(this); return false;' style='color: #0d6efd; text-decoration: underline;cursor: pointer;'>Edit</a>&nbsp;&nbsp;";
+                                var deletePath = "<a data-id='" + data + "' data-empName='" + row.empName + "' onclick='showDeleteModal(this); return false;' style='color: #0d6efd; text-decoration: underline;cursor: pointer;'>Delete</a>";
+
+                                return editPath + deletePath;
+                            }
+                        },
+                    ],
+                }
+            );
+
+            $('.dataTables_scrollBody').css('height', '300px');
+        }
+
+        // binding Department
+        function bindDepartment() {
+            var options = '';
+            $.ajax({
+                url: '@Url.Action("GetDepartmentList", "Home")',
+                type: "GET",
+                dataType: "JSON",
+                async: false,
+                success: function (result) {
+                    if (result != null) {
+                        for (var i = 0; i < result.length; i++) {
+                            options += '<option value="' + result[i].id + '" > ' + result[i].deptName + ' </option>';
+                        }
+                        document.getElementById('cmbUpdateDepartment').innerHTML = options;
+                        document.getElementById('cmbAddDepartment').innerHTML = options;
+                    }
+                }
+            });
+        }
+
+        // to show modal for Edit
+        function showEditModal(element) {
+            resetEditForm();
+
+            document.getElementById("modalTitle_edit").innerHTML = "Edit - " + $(element).attr("data-empName");
+            document.getElementById("txtUpdateEmpID").value = $(element).attr("data-id");
+            document.getElementById("txtUpdateEmpName").value = $(element).attr("data-empName");
+            document.querySelector('#cmbUpdateDepartment').value = $(element).attr("data-deptId");
+            document.getElementById("txtUpdateAddress").value = $(element).attr("data-address");
+            document.getElementById("txtUpdateEmail").value = $(element).attr("data-email");
+
+            $('#modal_edit').modal('toggle');
+        }
+
+        // reset form to clear error messages, textbox highlights and old inputs
+        function resetEditForm() {
+            $("li").removeAttr("style");
+            $("li").addClass("es-visible");
+            $("li").removeClass("selected");
+
+            editFormValidator.resetForm();
+            $("#EmployeeEditForm").find('.is-invalid').removeClass("is-invalid");
+
+            $('#txtUpdateEmpID').val("");
+            $('#txtUpdateEmpName').val("");
+            $('#cmbUpdateDepartment').val("");
+            $('#txtUpdateAddress').val("");
+            $('#txtUpdateEmail').val("");
+            $("label").removeClass('active');
+        }
+
+        // validate edit modal form element
+        var editFormValidator = $('#EmployeeEditForm').validate({
+            rules: {
+                txtUpdateEmpName: {
+                    required: true
+                },
+                cmbUpdateDepartment: {
+                    required: true
+                },
+                txtUpdateAddress: {
+                    required: true
+                },
+                txtUpdateEmail: {
+                    required: true
+                },
+            },
+            messages: {
+                txtUpdateEmpName: {
+                    required: "Please enter Employee Name."
+                },
+                cmbUpdateDepartment: {
+                    required: "Please select Department."
+                },
+                txtUpdateAddress: {
+                    required: "Please enter Address."
+                },
+                txtUpdateEmail: {
+                    required: "Please enter Email."
+                },
+            },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+            }
+        });
+
+        // update Employee
+        function UpdateEmployee() {
+            var empID = document.getElementById("txtUpdateEmpID").value;
+            var empName = document.getElementById("txtUpdateEmpName").value;
+            var deptID = document.querySelector('#cmbUpdateDepartment').value;
+            var address = document.getElementById("txtUpdateAddress").value;
+            var email = document.getElementById("txtUpdateEmail").value;
+            var token = $('[name=__RequestVerificationToken]').val();
+
+            var employee = {
+                Id: empID,
+                EmpName: empName,
+                DeptId: deptID,
+                Address: address,
+                Email: email
+            }
+
+            if ($('#EmployeeEditForm').valid()) {
+                $.ajax({
+                    url: '@Url.Action("UpdateEmployee", "Home")',
+                    type: 'POST',
+                    data: { __RequestVerificationToken: token, employee: employee },
+                    dataType: 'json',
+                    success: function (result) {
+                        if (result.result == true) {
+                            $('#modal_edit').modal('hide');
+                            alert("Successfully updated.");
+
+                            LoadEmployeeList();
+                        }
+                        else {
+                            alert(result.errorInfo.errMessage);
+                        }
+                    }
+                })
+            }
+        }
+
+        // to show modal for Add
+        $("#btnAddEmployee").click(function () {
+            resetAddForm();
+
+            $('#modal_add').modal('toggle');
+        });
+
+        // reset form to clear error messages, textbox highlights and old inputs
+        function resetAddForm() {
+            $("li").removeAttr("style");
+            $("li").addClass("es-visible");
+            $("li").removeClass("selected");
+
+            addFormValidator.resetForm();
+            $("#EmployeeAddForm").find('.is-invalid').removeClass("is-invalid");
+
+            $('#txtAddEmpName').val("");
+            $('#cmbAddDepartment').val("");
+            $('#txtAddAddress').val("");
+            $('#txtAddEmail').val("");
+            $("label").removeClass('active');
+        }
+
+        // validate add modal form element
+        var addFormValidator = $('#EmployeeAddForm').validate({
+            rules: {
+                txtAddEmpName: {
+                    required: true
+                },
+                cmbAddDepartment: {
+                    required: true
+                },
+                txtAddAddress: {
+                    required: true
+                },
+                txtAddEmail: {
+                    required: true
+                },
+            },
+            messages: {
+                txtAddEmpName: {
+                    required: "Please enter Employee Name."
+                },
+                cmbAddDepartment: {
+                    required: "Please select Department."
+                },
+                txtAddAddress: {
+                    required: "Please enter Address."
+                },
+                txtAddEmail: {
+                    required: "Please enter Email."
+                },
+            },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+            }
+        });
+
+        // add Employee
+        function AddEmployee() {
+            var empName = document.getElementById("txtAddEmpName").value;
+            var deptID = document.querySelector('#cmbAddDepartment').value;
+            var address = document.getElementById("txtAddAddress").value;
+            var email = document.getElementById("txtAddEmail").value;
+            var token = $('[name=__RequestVerificationToken]').val();
+
+            var employee = {
+                EmpName: empName,
+                DeptId: deptID,
+                Address: address,
+                Email: email
+            }
+
+            if ($('#EmployeeAddForm').valid()) {
+                $.ajax({
+                    url: '@Url.Action("AddEmployee", "Home")',
+                    type: 'POST',
+                    data: { __RequestVerificationToken: token, employee: employee },
+                    dataType: 'json',
+                    success: function (result) {
+                        if (result.result == true) {
+                            $('#modal_add').modal('hide');
+                            alert("Successfully added.");
+
+                            LoadEmployeeList();
+                        }
+                        else {
+                            alert(result.errorInfo.errMessage);
+                        }
+                    }
+                })
+            }
+        }
+
+        // to show modal for delete confirmation
+        function showDeleteModal(element) {
+            var empID = $(element).attr("data-id");
+            var empName = $(element).attr("data-empName");
+
+            document.getElementById("modalBody_delete").innerHTML = "<p>Are you sure to delete this Employee (" + empName + ")?</p><p id='empIDToDelete' style='display: none;'>" + empID + "</p>";
+            $('#modal_delete').modal('toggle');
+        }
+
+        // delete Employee
+        function DeleteEmployee() {
+            var empID = $('#empIDToDelete').text();
+            var token = $('[name=__RequestVerificationToken]').val();
+
+            $.ajax({
+                url: '@Url.Action("DeleteEmployee", "Home")',
+                type: 'POST',
+                data: { __RequestVerificationToken: token, empID: empID },
+                dataType: 'json',
+                success: function (result) {
+                    $('#modal_delete').modal('hide');
+                    if (result.result == true) {
+                        alert("Successfully deleted.");
+                    }
+                    else {
+                        alert(result.errorInfo.errMessage);
+                    }
+
+                    LoadEmployeeList();
+                }
+            })
+        }
+
+    </script>
+}

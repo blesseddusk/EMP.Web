@@ -5,8 +5,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - EMP.Web</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/datatables/datatables.min.css" />
+    <link href="~/datatables/datatables-1.13.1/css/datatables.bootstrap4.css" rel="stylesheet" />
+    <link href="~/datatables/datatables-1.13.1/css/datatables.bootstrap4.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/EMP.Web.styles.css" asp-append-version="true" />
+
+    <style>
+
+        .red-asterik {
+            color: red;
+            font-weight: 700;
+        }
+
+        .modal-dialog {
+            transform: translate(0,-50%) !important;
+            top: 50%;
+            margin: 0 auto;
+        }
+
+        .dataTables_info {
+            float: right
+        }
+
+        .dataTables_paginate {
+            float: left;
+        }
+
+        .dataTables_length {
+            text-align: center;
+        }
+
+        div.dataTables_wrapper div.dataTables_length select {
+            width: 50px;
+            display: inline-block;
+        }
+
+        .dataTables_scroll {
+            margin-bottom: 3px;
+        }
+
+    </style>
+
 </head>
 <body>
     <header>
@@ -43,6 +83,9 @@
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/datatables/datatables.min.js"></script>
+    <script src="~/lib/jquery-validation//dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/additional-methods.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
