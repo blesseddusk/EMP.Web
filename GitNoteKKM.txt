@@ -1,0 +1,43 @@
+1) Certificate Install
+2) Install Git-2.19.1-64-bit.exe
+3) Install TortoiseGit-2.7.0.0-64bit.msi
+4) Install putty
+5) Open PuttyGen
+   - Generate
+   - Add passphrase (it will use later on checkout)
+     Key PassPhrase :
+     Confirm passphrase : 
+   - Save private key (save fuke with ppk format)
+5) Run Command from GitBash
+   -$ git config --global user.email "メールアドレス"
+   -$ git config --global user.name "名前"
+   -$ git config --global http.sslVerify false
+6) Git Colne
+   - Enter server URL
+   - Enter target local directory
+   - Putty load ( Use the ppk file that save from step-5)
+
+Create Git branch
+From Git bash
+1) $ git pull
+2) Check all existing branch
+	$ git branch -a
+3) Checkout new branch
+   $ git checkout -b [name_of_your_new_branch] (no need to write [])
+4) Put branch on github
+   $ git push origin [name_of_your_new_branch] (no need to write [])
+5) Check all existing branch to check whether your new branch is created or not
+	$ git branch -a
+
+Git Merge
+--------
+1. Select target branch
+2. Click New Pull Request button
+3. Base : Target branch (branch that will be merged into), Compare : Source branch (master : branch that will be merged from)
+4. [Create Pull Request] button -> Add Comment -> [Create pull request]
+5. If the changes can be merged automatically, click [Merge pull request] > [Confirm Merge] to merge it by clicking Merge button. After that, pull from checkout path.
+6. If the changes cannot be mergeed automatically, run the following command with Git Bash command in target checkout directory
+   - git checkout -b WWRSPF-master v2.3.0-oss
+   - git pull https://172.21.1.11/gitbucket/git/WWRSPF/wwrspf-source.git [target branch name] =?> No need to write []
+7. Solve the conlfict before committing
+   Left : Target branch, Right : Source branch
