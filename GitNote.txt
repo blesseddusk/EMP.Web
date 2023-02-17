@@ -1,0 +1,101 @@
+git config --global user.name "layehtaw"
+git config --global user.email "layehtaw.mm@gmail.com"
+
+git config user.name
+git config user.email
+
+// Create new repository
+git init
+
+git status
+
+// Modified => Staging => Commited
+// Red => Modified
+// Green => Staging
+
+// Add to Staging
+git add index.html
+git add .
+
+// Remove from Staging
+git rm --cached index.html
+
+// Commited
+git commit -m "first commit"
+
+// log
+git log
+git log --oneline
+
+// Checkout commit
+// Revert commit
+// Reset commit
+
+// Checkout commit
+git checkout 17d078e
+
+// for latest commit
+git checkout master
+
+// Revert commit
+git revert f839b31
+
+// Reset commit
+git reset 17d078e --hard
+
+// Master Branch (Stable Version) (Default Branch)
+// Feature Branch
+
+// View branch
+git branch -a
+
+// Create branch
+git branch feature-1
+
+// Go to branch
+git checkout feature-1
+
+// Create and go to branch in one line
+git checkout -b feature-3
+
+// Delete branch (on master branch)
+git branch -D feature-3
+
+// Merge branch
+git checkout master
+git merge developer1
+
+// GitHub
+git remote -v
+
+git remote add origin https://github.com/blesseddusk/My-Portfolio.git
+
+git push origin master
+
+// origin => link
+// master => branch name
+
+// Delete branch from github
+// 1. Delete from local
+git branch -D dev1
+
+
+// 2. Delete branch from github
+
+git push origin --delete dev1
+
+// Clone
+git clone https://github.com/blesseddusk/My-Portfolio.git
+
+
+
+
+
+
+
+
+
+
+
+
+
